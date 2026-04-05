@@ -94,6 +94,3 @@ footer{border-top:1px solid #ffffff06;padding:20px 24px;display:flex;align-items
 @media(max-width:480px){[style*="grid-template-columns:repeat(4"]{grid-template-columns:1fr!important}}
 #ad-left,#ad-right{position:fixed;top:50%;transform:translateY(-50%);z-index:10}
 #ad-left{left:0}#ad-right{right:0}#ad-footer{margin:0 auto}
-
-#p-home[data-built="1"]{display:block!important;padding:0!important}
-#p-home[data-built="1"] .con{display:none}
