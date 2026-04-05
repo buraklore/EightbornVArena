@@ -183,7 +183,7 @@ window.addEventListener('load', function() {
     // GAMES
     '<div style="max-width:1400px;margin:auto;padding:56px 32px 0" id="sec-games">' +
       '<div style="display:flex;align-items:center;gap:14px;margin-bottom:28px"><h2 class="fd" style="font-size:38px;letter-spacing:2px">OYUNLAR</h2><div style="flex:1;height:1px;background:#ffffff06"></div><div style="font-size:14px;font-weight:700;color:var(--t3);background:var(--bg3);padding:6px 14px;border-radius:8px">8 mod</div></div>' +
-      '<div class="home-games-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">' + gamesHtml + '</div>' +
+      '<div id="hg2" class="home-games-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">' + gamesHtml + '</div>' +
     '</div>' +
 
     // LEADERBOARD
@@ -263,13 +263,21 @@ window.addEventListener('load', function() {
   var _origGo=window.go;
   window.go=function(pg){
     if(pg==='home'||pg==='lb'||pg==='contact'){goSec(pg);return;}
-    // For games, admin, login, register - use original go
-    // First make sure p-home is hidden
+    // Hide p-home first
     var _ph=document.getElementById('p-home');
-    if(_ph)_ph.style.display='none';
-    if(typeof _origGo==='function'){
-      try{_origGo(pg);}catch(e){console.error('go error:',e);}
+    if(_ph){_ph.classList.add('hid');_ph.style.display='none';}
+    // Admin: direct handling for reliability
+    if(pg==='admin'){
+      if(typeof curUser==='undefined'||!curUser||curUser.role!=='ADMIN'){if(typeof toast==='function')toast('Admin yetkisi gerekli!',false);goSec('home');return;}
+      document.querySelectorAll('[id^="p-"]').forEach(function(e){e.classList.add('hid');e.style.display='none';});
+      var pa=document.getElementById('p-admin');
+      if(pa){pa.classList.remove('hid');pa.style.display='block';}
+      window.scrollTo({top:0,behavior:'smooth'});
+      if(typeof rAdm==='function')rAdm();
+      return;
     }
+    // Everything else: use original go
+    if(typeof _origGo==='function'){try{_origGo(pg);}catch(e){console.error('go error:',e);}}
   };
 
   // Fix footer - remove link
