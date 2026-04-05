@@ -214,17 +214,58 @@ function addFate(){
 }
 
 function aRanking(e){
-  e.innerHTML='<div style="text-align:center;padding:20px;color:var(--t2)">Yükleniyor...</div>';
-  apiGetLeaderboard().then(function(data){
-    var lb=data.leaderboard||[];
-    e.innerHTML='<div style="margin-bottom:16px"><h3 class="fd" style="font-weight:600;font-size:15px">🏆 Sıralama <span class="badge bgl">'+lb.length+'</span></h3></div>'+
-    (lb.length===0?'<div class="card" style="text-align:center;padding:40px;color:var(--t3)">Henüz skor yok.</div>':
-    '<div class="card" style="padding:0;overflow-x:auto"><table style="width:100%;border-collapse:collapse"><thead><tr style="border-bottom:1px solid var(--b1);font-size:11px;color:var(--t3)"><th style="text-align:left;padding:10px">#</th><th style="text-align:left;padding:10px">Kullanıcı</th><th style="text-align:center;padding:10px">Puan</th><th style="text-align:center;padding:10px">Oyun</th><th style="text-align:right;padding:10px">İşlem</th></tr></thead><tbody>'+
-    lb.map(function(u,i){return '<tr style="border-bottom:1px solid #2a2a3a20"><td style="padding:8px 10px;font-weight:600;color:var(--m)">'+(i+1)+'</td><td style="padding:8px 10px;font-weight:500">'+esc(u.username)+'</td><td style="padding:8px;text-align:center"><span class="badge bv">'+u.best_score+'</span></td><td style="padding:8px;text-align:center;color:var(--t3)">'+u.games_played+'</td><td style="padding:8px 10px;text-align:right"><button class="btn bg bsm" style="padding:3px 8px;font-size:11px" onclick="editScore('+u.id+',\''+esc(u.username)+'\','+u.best_score+')">✏️ Puan</button></td></tr>'}).join('')+
-    '</tbody></table></div>');
+  var games = [
+    {key:'FACE',name:'🤔 Yüzden Bil'},
+    {key:'MEMORY',name:'🧠 Eightborn Moruq'},
+    {key:'QUOTE',name:'💬 Replik Bil'}
+  ];
+  
+  e.innerHTML = '<div style="margin-bottom:16px"><h3 class="fd" style="font-size:15px">🏆 Oyun Sıralaması</h3></div>' +
+    '<div style="display:flex;gap:6px;margin-bottom:16px">' +
+    games.map(function(g){
+      return '<button class="lb-tab'+(window._admRankGame===g.key?' on':'')+'" onclick="window._admRankGame=\''+g.key+'\';aRanking(document.getElementById(\'adm-c\'))">'+g.name+'</button>';
+    }).join('') +
+    '</div>' +
+    '<div id="adm-rank-content"><div style="text-align:center;padding:40px;color:var(--t3)">Yükleniyor...</div></div>';
+  
+  if(!window._admRankGame) window._admRankGame = 'FACE';
+  
+  apiGetGameLeaderboard(window._admRankGame).then(function(r){
+    var lb = r.leaderboard || [];
+    var h = '';
+    if(lb.length === 0){
+      h = '<div class="card" style="text-align:center;padding:32px;color:var(--t3)">Henüz skor yok</div>';
+    } else {
+      h = '<div style="display:flex;flex-direction:column;gap:4px">';
+      lb.forEach(function(u,i){
+        var score = parseInt(u.total_score || u.score || 0);
+        var games = parseInt(u.games_played || u.plays || 0);
+        h += '<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px">' +
+          '<span style="font-family:Bebas Neue;font-size:20px;width:32px;text-align:center;color:'+(i<3?'var(--g)':'var(--t3)')+'">'+( i+1)+'</span>' +
+          '<span style="flex:1;font-weight:600">'+esc(u.username)+'</span>' +
+          '<span style="font-family:Bebas Neue;font-size:18px;color:var(--m)">'+score+'</span>' +
+          '<span style="font-size:12px;color:var(--t3);width:40px;text-align:right">'+games+' oyun</span>' +
+          '<button class="btn bg bsm" onclick="editGameScore('+u.user_id+',\''+esc(u.username)+'\',\''+window._admRankGame+'\','+score+')">✏️</button>' +
+          '</div>';
+      });
+      h += '</div>';
+    }
+    document.getElementById('adm-rank-content').innerHTML = h;
   });
 }
 
+function editGameScore(userId, username, gameType, currentScore) {
+  var newScore = prompt(username + ' - ' + gameType + ' puanı (şu an: ' + currentScore + '):', currentScore);
+  if (newScore === null) return;
+  newScore = parseInt(newScore);
+  if (isNaN(newScore)) { toast('Geçersiz puan!', false); return; }
+  
+  apiPost('/admin/edit-game-score', { user_id: userId, game_type: gameType, score: newScore }).then(function(r){
+    if(r.error) { toast(r.error, false); return; }
+    toast('Puan güncellendi!');
+    aRanking(document.getElementById('adm-c'));
+  });
+}
 
 function wqSection(){
   var h='<div style="margin-top:32px;border-top:1px solid var(--b1);padding-top:24px">';
