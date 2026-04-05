@@ -63,7 +63,7 @@ function renderFaceCard() {
       <div class="gi" style="background:linear-gradient(135deg,#2dd4bf,#2dd4bf);width:48px;height:48px;font-size:22px">🤔</div>
       <div style="flex:1">
         <h2 class="fd" style="font-weight:700;font-size:28px">Yüzden Bil</h2>
-        <p style="font-size:12px;color:var(--t3)">${done + 1}/${total} karakter</p>
+        <p style="font-size:16px;color:var(--t3)">${done + 1}/${total} karakter</p>
       </div>
       <div style="text-align:right">
         <div style="font-size:24px;font-weight:700"><span style="color:var(--m)">${s.correct.length}✓</span> <span style="color:var(--pk)">${s.wrong.length}✗</span></div>
