@@ -13,7 +13,7 @@ function quoteStart() {
   if (withRep.length < 4) {
     ag.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 0">
-        <button class="btn bg bsm" onclick="bk()">← Geri</button>
+        
         <div class="gi" style="background:linear-gradient(135deg,#f59e0b,#eab308);width:72px;height:72px;font-size:36px">💬</div>
         <h2 class="fd" style="font-weight:700;font-size:36px">Replik Bil</h2>
       </div>
@@ -30,7 +30,7 @@ function quoteStart() {
   
   ag.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 0">
-      <button class="btn bg bsm" onclick="bk()">← Geri</button>
+      
       <div class="gi" style="background:linear-gradient(135deg,#f59e0b,#eab308);width:72px;height:72px;font-size:36px">💬</div>
       <h2 class="fd" style="font-weight:700;font-size:36px">Replik Bil</h2>
     </div>
