@@ -243,6 +243,7 @@ window.addEventListener('load', function() {
       if(cn[g.t+'_name']) g.n=cn[g.t+'_name'];
       if(cn[g.t+'_desc']) g.d=cn[g.t+'_desc'];
     });
+    var cn=window._customGameNames||{};games.forEach(function(g){if(cn[g.t+'_name'])g.n=cn[g.t+'_name'];if(cn[g.t+'_desc'])g.d=cn[g.t+'_desc'];});
     return games.filter(function(g){
       var gd=GD.find(function(x){return x.t===g.t});
       return gd&&gd.on;
