@@ -3,8 +3,8 @@ var lbPeriod = 'alltime';
 async function rLB(){
   var lbt = document.getElementById('lbt');
   lbt.innerHTML = '<div style="max-width:100%;margin:0 auto">' +
-    '<h2 class="fd" style="text-align:center;font-size:48px;font-weight:700;margin-bottom:28px">\ud83c\udfc6 SIRALAMA</h2>' +
-    '<div style="display:flex;gap:6px;justify-content:center;margin-bottom:24px;flex-wrap:wrap">' +
+    '' +
+    '<div style="display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap">' +
     lbPeriodBtn('daily', 'Günlük') +
     lbPeriodBtn('weekly', 'Haftalık') +
     lbPeriodBtn('monthly', 'Aylık') +
