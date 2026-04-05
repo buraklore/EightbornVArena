@@ -25,13 +25,22 @@ document.getElementById('hg').innerHTML=gcH();document.getElementById('gg').inne
 
 // Play from any page
 function playDirect(t){
-  document.querySelectorAll('[id^="p-"]').forEach(e=>e.classList.add('hid'));
-  document.getElementById('p-games').classList.remove('hid');
-  document.querySelectorAll('.nl').forEach(l=>l.classList.remove('a'));
+  // Hide all pages
+  document.querySelectorAll('[id^="p-"]').forEach(function(e){e.classList.add('hid')});
+  // Show games page
+  var gp=document.getElementById('p-games');
+  if(gp){gp.classList.remove('hid');gp.style.display='';}
+  // Reset game page elements
+  var ag=document.getElementById('ag');if(ag)ag.classList.add('hid');
+  var gg=document.getElementById('gg');if(gg)gg.style.display='';
+  var gh=document.getElementById('games-hdr');if(gh)gh.style.display='';
+  // Update nav
+  document.querySelectorAll('.nl').forEach(function(l){l.classList.remove('a')});
   document.querySelectorAll('.mob-nav a').forEach(function(a){a.classList.remove('on')});
-  var ma=document.querySelectorAll('.mob-nav a');if(ma[1])ma[1].classList.add('on');
+  var ma=document.querySelectorAll('.mob-nav a');if(ma&&ma[1])ma[1].classList.add('on');
   window.scrollTo({top:0,behavior:'smooth'});
-  play(t);
+  // Start game
+  try{play(t);}catch(e){console.error('play error:',e);}
 }
 
 function play(t){
@@ -231,9 +240,24 @@ window.addEventListener('load', function() {
   // Inject mobile nav
   if(!document.querySelector('.mob-nav')){var mn=document.createElement('div');mn.className='mob-nav';mn.innerHTML='<div class="mob-nav-inner"><a href="#" class="on" onclick="goSec(\'home\');return false"><span>\u26a1</span>Anasayfa</a><a href="#" onclick="goSec(\'games\');return false"><span>\ud83c\udfae</span>Oyunlar</a><a href="#" onclick="goSec(\'lb\');return false"><span>\ud83c\udfc6</span>Sıralama</a><a href="#" onclick="goSec(\'contact\');return false"><span>\ud83d\udcec</span>İletişim</a><a href="#" onclick="go(\'login\');return false"><span>\ud83d\udc64</span>Profil</a></div>';document.body.appendChild(mn);}
 
-  // Override go
-  var _og=window.go;
-  window.go=function(pg){if(pg==='home'||pg==='lb'||pg==='contact'){goSec(pg);return;}if(typeof _og==='function')_og(pg);};
+  // Override go - handle ALL page navigation
+  var _origGo=window.go;
+  window.go=function(pg){
+    if(pg==='home'||pg==='lb'||pg==='contact'){goSec(pg);return;}
+    // For games, admin, login, register - use original go
+    if(typeof _origGo==='function'){
+      try{_origGo(pg);}catch(e){console.error('go error:',e);}
+    }
+  };
+
+  // Fix footer - remove link
+  var footerLinks=document.querySelectorAll('footer a');
+  footerLinks.forEach(function(a){
+    var span=document.createElement('span');
+    span.textContent=a.textContent;
+    span.style.color='var(--t3)';
+    a.parentNode.replaceChild(span,a);
+  });
 
   // Build and render
   renderNav();
