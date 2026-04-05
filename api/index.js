@@ -160,3 +160,36 @@ app.post('/api/game-names', auth, adm, async function(req, res) {
     res.json({ success: true });
   } catch(e) { res.status(500).json({ error: 'Kaydedilemedi.' }); }
 });
+
+app.post('/api/admin/update-username', auth, adm, async function(req, res) {
+  try {
+    await ensureDb();
+    var userId = req.body.user_id;
+    var newName = req.body.username;
+    if (!userId || !newName) return res.status(400).json({ error: 'user_id ve username gerekli' });
+    await db.query("UPDATE users SET username = $1 WHERE id = $2", [newName, userId]);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: 'Güncellenemedi: ' + e.message }); }
+});
+
+app.post('/api/admin/edit-game-score', auth, adm, async function(req, res) {
+  try {
+    await ensureDb();
+    var userId = req.body.user_id;
+    var gameType = req.body.game_type;
+    var score = parseInt(req.body.score);
+    if (!userId || !gameType || isNaN(score)) return res.status(400).json({ error: 'Eksik parametre' });
+    
+    // Delete existing scores for this user+game and insert new
+    await db.query("DELETE FROM game_scores WHERE user_id = $1 AND game_type = $2", [userId, gameType]);
+    if (score > 0) {
+      await db.query("INSERT INTO game_scores (user_id, game_type, score, total, played_at) VALUES ($1, $2, $3, 1, NOW())", [userId, gameType, score]);
+    }
+    
+    // Also update best_score in users table
+    var best = await db.query("SELECT COALESCE(SUM(score),0) as total FROM game_scores WHERE user_id = $1", [userId]);
+    await db.query("UPDATE users SET best_score = $1 WHERE id = $2", [parseInt(best.rows[0].total), userId]);
+    
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: 'Güncellenemedi: ' + e.message }); }
+});
