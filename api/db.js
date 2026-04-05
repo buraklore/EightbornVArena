@@ -124,7 +124,7 @@ async function getAllUsers() { var r = await query("SELECT id, username, email, 
 async function banUser(id, banned) { await query("UPDATE users SET banned = $1 WHERE id = $2 AND role != 'ADMIN'", [banned, id]); }
 
 async function getGameLeaderboard(gameType) {
-  var r = await query("SELECT gs.user_id, u.username, MAX(gs.score) as best_score, COUNT(*) as games_played, MAX(gs.total) as total FROM game_scores gs JOIN users u ON gs.user_id = u.id WHERE gs.game_type = $1 GROUP BY gs.user_id, u.username ORDER BY best_score DESC LIMIT 50", [gameType]);
+  var r = await query("SELECT gs.user_id, u.username, SUM(gs.score) as total_score, COUNT(*) as games_played FROM game_scores gs JOIN users u ON gs.user_id = u.id WHERE gs.game_type = $1 GROUP BY gs.user_id, u.username ORDER BY total_score DESC LIMIT 50", [gameType]);
   return r.rows;
 }
 
