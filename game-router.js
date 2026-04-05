@@ -1,5 +1,5 @@
 // ═══ GAME CARDS ═══
-let GD=[{t:'STREAM',e:'🎬',d:'Chatinizle oynayabileceğiniz interaktif oyunlar',gr:'linear-gradient(135deg,#ff0000,#cc0000)',on:true,isNew:true},{t:'DIE',e:'⚔️',d:'Son hayatta kalan kim?',gr:'linear-gradient(135deg,#e8433e,#e8433e)',on:true},{t:'TEAM',e:'👥',d:'8 kişilik ekibini oluştur ve geri kalan herkesi CK\'la!',gr:'linear-gradient(135deg,#3b82f6,#06b6d4)',on:true},{t:'FATE',e:'🎲',d:'Flört mü edeceksin yoksa ihanet mi?',gr:'linear-gradient(135deg,#ec4899,#e8433e)',on:true},{t:'FACE',e:'🤔',d:'Karakterlerin fotoğraflarından isimlerini tahmin et!',gr:'linear-gradient(135deg,#2dd4bf,#14b8a6)',on:true},{t:'QUOTE',e:'💬',d:'Bu repliğin hangi karaktere ait olduğunu bilebilecek misin?',gr:'linear-gradient(135deg,#f59e0b,#eab308)',on:true},{t:'MEM',e:'🧠',d:'Eightborn hakkında ne kadar bilgilisin?',gr:'linear-gradient(135deg,#6366f1,#3b82f6)',on:true},{t:'WHO',e:'❓',d:'Hangi Eightborn karakterine benzediğini bul!',gr:'linear-gradient(135deg,#f472b6,#e8433e)',on:true}];
+let GD=[{t:'STREAM',e:'🎬',d:'Chatinizle oynayabileceğiniz interaktif oyunlar',gr:'linear-gradient(135deg,#ff0000,#cc0000)',on:true,isNew:true},{t:'DIE',e:'⚔️',d:'Son hayatta kalan kim?',gr:'linear-gradient(135deg,#e8433e,#e8433e)',on:true},{t:'TEAM',e:'👥',d:'8 kişilik ekibini oluştur ve geri kalan herkesi CK&#39;la!',gr:'linear-gradient(135deg,#3b82f6,#06b6d4)',on:true},{t:'FATE',e:'🎲',d:'Flört mü edeceksin yoksa ihanet mi?',gr:'linear-gradient(135deg,#ec4899,#e8433e)',on:true},{t:'FACE',e:'🤔',d:'Karakterlerin fotoğraflarından isimlerini tahmin et!',gr:'linear-gradient(135deg,#2dd4bf,#14b8a6)',on:true},{t:'QUOTE',e:'💬',d:'Bu repliğin hangi karaktere ait olduğunu bilebilecek misin?',gr:'linear-gradient(135deg,#f59e0b,#eab308)',on:true},{t:'MEM',e:'🧠',d:'Eightborn hakkında ne kadar bilgilisin?',gr:'linear-gradient(135deg,#6366f1,#3b82f6)',on:true},{t:'WHO',e:'❓',d:'Hangi Eightborn karakterine benzediğini bul!',gr:'linear-gradient(135deg,#f472b6,#e8433e)',on:true}];
 let TEAM_MAX=8;
 let CHAR_TYPES=['Lider', 'Yalancı', 'Dedikoducu', 'Korkak', 'Cesur', 'Aptal', 'Kavgacı', 'Araba Delisi', 'Silah Delisi', 'Sadık', 'Hain', 'Cimri', 'Hovarda', 'Soğukkanlı', 'Sinirli', 'Tembel', 'Çalışkan', 'Romantik', 'Kıskanç', 'Şüpheci', 'Maceracı', 'Karizmatik', 'Manipülatif', 'Fedakar', 'Bencil', 'Asi', 'Paracı', 'Hesapçı', 'Vicdanlı', 'Psikopat'];
 let GN={DIE:'Kim Hayatta Kalacak',TEAM:'Ekibini Kur',FATE:'Kaderini Seç',FACE:'Yüzden Bil',QUOTE:'Replik Bil',MEM:'Eightborn Moruq',WHO:'Sen Kimsin?',STREAM:'Yayıncı Oyunları'};
@@ -155,9 +155,9 @@ window.addEventListener('load', function() {
     // HERO
     '<div class="w" style="max-width:1400px;margin:auto;padding:72px 32px 56px;display:flex;align-items:center;justify-content:space-between;gap:0" id="sec-home">' +
       '<div class="ht" style="width:420px;flex-shrink:0;position:relative;z-index:2">' +
-        '<div style="display:inline-block;font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--m);background:rgba(45,212,191,.08);padding:6px 16px;border-radius:8px;margin-bottom:20px">FiveM Roleplay Arenası</div>' +
+        '<div style="display:inline-block;font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--m);background:rgba(45,212,191,.08);padding:6px 16px;border-radius:8px;margin-bottom:20px">İnteraktif Oyunlar</div>' +
         '<h1 class="fd" style="font-size:clamp(52px,7vw,80px);line-height:.95;letter-spacing:2px;margin-bottom:18px">EIGHTBORN<span style="color:var(--v)">V</span><br>ARENA</h1>' +
-        '<p style="font-size:17px;color:var(--t2);line-height:1.7;margin-bottom:28px">Karakterlerini ne kadar tanıyorsun? 8 farklı oyun modunda yeteneklerini test et, sıralamaya gir, chat ile yarış.</p>' +
+        '<p style="font-size:17px;color:var(--t2);line-height:1.7;margin-bottom:28px">Hangi Eightborn karakterine benzediğini bul! En sevdiğin karakteri hayatta tut ve Diğerlerini CK&#39;la! Chat ile birlikte yarış!</p>' +
         '<div class="hbtns" style="display:flex;gap:10px">' +
           '<button class="btn bp" style="padding:14px 32px;font-size:16px;border-radius:12px;box-shadow:0 4px 16px rgba(232,67,62,.3)" onclick="document.getElementById(\'sec-games\').scrollIntoView({behavior:\'smooth\'})">Oynamaya Başla</button>' +
           '<button class="btn bs" style="padding:14px 32px;font-size:16px;border-radius:12px;border:1px solid #ffffff15" onclick="document.getElementById(\'sec-games\').scrollIntoView({behavior:\'smooth\'})">Oyunlara Göz At</button>' +
@@ -201,14 +201,14 @@ window.addEventListener('load', function() {
       apiGet('/init').then(function(r){
         var el=document.getElementById('home-stats');if(!el)return;
         var chars=r.characters?r.characters.length:218;
-        el.querySelector('[data-s="chars"]').textContent=chars+'+';
+        var ce=el.querySelector('[data-s="chars"]');if(ce)ce.textContent=chars+'+';
       }).catch(function(){});
       apiGet('/scores/timed-leaderboard?period=alltime').then(function(r){
         var el=document.getElementById('home-stats');if(!el)return;
         var total=0;var pts=0;
         (r.leaderboard||[]).forEach(function(u){total+=parseInt(u.games_played||0);pts+=parseInt(u.total_score||0);});
-        el.querySelector('[data-s="plays"]').textContent=(total>0?total.toLocaleString():2500)+'+';
-        el.querySelector('[data-s="pts"]').textContent=(pts>0?pts.toLocaleString():45000)+'+';
+        var pe=el.querySelector('[data-s="plays"]');if(pe)pe.textContent=total.toLocaleString()+'+';
+        var pte=el.querySelector('[data-s="pts"]');if(pte)pte.textContent=pts.toLocaleString()+'+';
       }).catch(function(){});
     }
   }
@@ -261,6 +261,17 @@ window.addEventListener('load', function() {
     span.style.color='var(--t3)';
     a.parentNode.replaceChild(span,a);
   });
+
+  // Force load ads immediately
+  if(typeof apiGet==='function'){
+    apiGet('/init').then(function(r){
+      if(r&&r.ads){
+        window.adConfig=r.ads;
+        try{sessionStorage.setItem('ebv_ads',JSON.stringify(r.ads));}catch(e){}
+        if(typeof applyAds==='function')applyAds();
+      }
+    }).catch(function(){});
+  }
 
   // Build and render
   renderNav();
