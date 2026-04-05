@@ -106,7 +106,7 @@ function renderQuoteCard() {
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px" id="quote-opts">
           ${options.map(o => `
             <div class="card" id="qo-${o.id}" style="cursor:pointer;padding:20px;display:flex;align-items:center;gap:16px;transition:all .3s" onclick="quoteGuess('${o.id}','${c.id}')">
-              <div style="width:64px;height:64px;border-radius:14px;overflow:hidden;flex-shrink:0">${cp(o, 64)}</div>
+              
               <div style="text-align:left">
                 <div class="fd" style="font-size:20px;font-weight:600">${o.n} ${o.s}</div>
               </div>
@@ -166,11 +166,11 @@ function renderQuoteResult() {
         <div style="font-size:64px;font-weight:700;margin:20px 0;color:${pct >= 70 ? 'var(--m)' : pct >= 40 ? 'var(--g)' : 'var(--pk)'}" class="fd">%${pct}</div>
         
         ${s.correct.length > 0 ? '<div style="margin-top:20px"><p style="font-size:16px;color:var(--m);margin-bottom:12px">✅ Doğru</p><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">' +
-          s.correct.map(c => '<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:10px;background:#2dd4bf10;border:1px solid #2dd4bf25;font-size:14px"><div style="width:32px;height:32px;border-radius:8px;overflow:hidden">' + cp(c, 32) + '</div>' + esc(c.n) + ' ' + esc(c.s) + '</div>').join('') +
+          s.correct.map(c => '<div style="display:flex;align-items:center;gap:6px;padding:12px 20px;border-radius:12px;background:#2dd4bf10;border:1px solid #2dd4bf25;font-size:20px;font-weight:600"><div style="width:32px;height:32px;border-radius:8px;overflow:hidden">' + cp(c, 32) + '</div>' + esc(c.n) + ' ' + esc(c.s) + '</div>').join('') +
           '</div></div>' : ''}
         
         ${s.wrong.length > 0 ? '<div style="margin-top:16px"><p style="font-size:16px;color:var(--pk);margin-bottom:12px">❌ Yanlış</p><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">' +
-          s.wrong.map(c => '<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:10px;background:#e8433e10;border:1px solid #e8433e25;font-size:14px"><div style="width:32px;height:32px;border-radius:8px;overflow:hidden">' + cp(c, 32) + '</div>' + esc(c.n) + ' ' + esc(c.s) + '</div>').join('') +
+          s.wrong.map(c => '<div style="display:flex;align-items:center;gap:6px;padding:12px 20px;border-radius:12px;background:#e8433e10;border:1px solid #e8433e25;font-size:20px;font-weight:600"><div style="width:32px;height:32px;border-radius:8px;overflow:hidden">' + cp(c, 32) + '</div>' + esc(c.n) + ' ' + esc(c.s) + '</div>').join('') +
           '</div></div>' : ''}
         
         <div style="display:flex;justify-content:center;gap:12px;margin-top:32px">
