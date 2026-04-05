@@ -1,15 +1,15 @@
 // ═══ EightBornV — Auth & Navigation (API-based) ═══
 
 function renderNav(){
-  document.getElementById('main-nav').innerHTML='<div class="ni">'+
-    '<a onclick="go(\'home\')" style="display:flex;align-items:center;gap:10px;cursor:pointer"><div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--v),var(--m));display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-weight:700;font-size:20px" class="fd">8B</span></div><span class="fd" style="font-weight:700;font-size:28px">Eightborn<span style="color:var(--v)">V</span> Arena</span></a>'+
+  document.getElementById('nav-root').innerHTML='<nav><div class="ni" style="max-width:1400px">'+
+    '<a onclick="goSec(\'home\')" style="cursor:pointer;text-decoration:none"><span class="fd" style="font-size:34px;letter-spacing:2px">EIGHTBORN<b style=\'color:var(--v)\'>V</b></span></a>'+
     '<div class="nls" style="gap:4px;flex-wrap:nowrap"><button class="nl" style="font-size:15px;padding:8px 16px;white-space:nowrap" data-p="home" onclick="goSec(\'home\')">Ana Sayfa</button><button class="nl" style="font-size:15px;padding:8px 16px;white-space:nowrap" data-p="games" onclick="goSec(\'games\')">Oyunlar</button><button class="nl" style="font-size:15px;padding:8px 16px;white-space:nowrap" data-p="lb" onclick="goSec(\'lb\')">Sıralama</button><button class="nl" style="font-size:15px;padding:8px 16px;white-space:nowrap" data-p="contact" onclick="goSec(\'contact\')">Bize Ulaşın</button>'+(curUser&&curUser.role==='ADMIN'?'<button class="nl" data-p="admin" onclick="go(\'admin\')" style="color:var(--pk);font-size:15px;padding:8px 16px;white-space:nowrap">Admin</button>':'')+'<a id="discord-link" href="#" target="_blank" style="display:none;font-size:15px;padding:10px 22px;white-space:nowrap;text-decoration:none;border-radius:10px;background:#5865F2;color:#fff;font-weight:700;margin-right:48px">Discord</a></div>'+
     (curUser?
       '<div style="display:flex;align-items:center;gap:12px;padding:10px 18px;border-radius:14px;background:var(--bg3)"><div style="width:40px;height:40px;border-radius:10px;background:#e8433e20;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--v)">'+esc(curUser.username)[0].toUpperCase()+'</div><div><div style="font-size:16px;font-weight:600">'+esc(curUser.username)+'</div><div style="font-size:13px;color:var(--m)">Puan: '+curUser.best_score+'</div></div><button class="btn bg" style="padding:6px 14px;font-size:14px;margin-left:8px;color:var(--pk);border:1px solid var(--pk);border-radius:8px" onclick="doLogout()">Çıkış</button></div>'
     :
       '<div style="display:flex;gap:10px"><button class="btn bs" style="font-size:16px;padding:10px 20px" onclick="go(\'login\')">Giriş</button><button class="btn bp bsm" onclick="go(\'register\')">Kayıt Ol</button></div>'
     )+
-  '</div>';
+  '</div></nav>';
 }
 
 // ═══ AUTH ═══
