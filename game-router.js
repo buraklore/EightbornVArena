@@ -54,118 +54,173 @@ document.getElementById('ag').innerHTML='<div style="display:flex;align-items:ce
 function gW(){toast('Seçildi!');bk()}
 
 
+
 // ═══ NEW HOMEPAGE OVERRIDE ═══
-// Runs after auth.js loads, overrides layout
 window.addEventListener('load', function() {
-  
-  // Override renderNav with new design
-  var _origRenderNav = typeof renderNav === 'function' ? renderNav : null;
+
+  // Inject CSS matching approved demo exactly
+  var _css = document.createElement('style');
+  _css.textContent = '' +
+    '.fd{font-family:Bebas Neue,sans-serif;letter-spacing:1px}' +
+    '@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}' +
+
+    // Game cards - exact demo values
+    '.gc-new{background:linear-gradient(180deg,#1e1e2a,#16161f);border:1px solid #ffffff14;border-radius:18px;padding:48px 32px;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.3)}' +
+    '.gc-new::before{content:\'\';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#e8433e,#2dd4bf);opacity:.4;transition:.3s}' +
+    '.gc-new:hover::before{opacity:1}' +
+    '.gc-new:hover{border-color:#ffffff25;transform:translateY(-6px);box-shadow:0 20px 56px rgba(0,0,0,.5),0 0 40px rgba(232,67,62,.08)}' +
+    '.gc-new .gc-i{width:92px;height:92px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 20px;border:1px solid #ffffff0a;box-shadow:0 4px 12px rgba(0,0,0,.2)}' +
+    '.gc-new h3{font-size:22px;font-weight:800;margin-bottom:10px;color:#fff}' +
+    '.gc-new p{font-size:16px;color:var(--t2);line-height:1.5;margin-bottom:16px}' +
+    '.gc-new .diff{display:inline-block;font-size:14px;font-weight:700;padding:6px 16px;border-radius:8px}' +
+    '.gc-new.str{background:linear-gradient(135deg,rgba(232,67,62,.1),rgba(139,92,246,.08));border-color:rgba(232,67,62,.3);box-shadow:0 4px 24px rgba(232,67,62,.12)}' +
+    '.gc-new.str::before{background:#e8433e;opacity:.7}' +
+    '.gc-new.str:hover{border-color:#e8433e;box-shadow:0 20px 56px rgba(232,67,62,.15)}' +
+    '.gc-new .ltag{position:absolute;top:14px;right:14px;font-size:13px;font-weight:800;letter-spacing:.5px;padding:6px 14px;border-radius:8px;background:#e8433e;color:#fff}' +
+
+    // Responsive
+    '@media(max-width:900px){' +
+      '#sec-home{flex-direction:column!important;padding-top:48px!important;gap:32px!important;text-align:center}' +
+      '#sec-home .ht{width:100%!important}#sec-home .ht p{margin:0 auto 24px}#sec-home .ht .hbtns{justify-content:center}' +
+      '#sec-home .hi{width:100%!important}' +
+      '#home-stats{grid-template-columns:1fr 1fr!important}' +
+      '.home-games-grid{grid-template-columns:1fr 1fr!important}' +
+      '#sec-contact>div{flex-direction:column!important;padding:36px!important;gap:28px!important}' +
+      '#sec-contact>div>div:last-child{max-width:100%!important;width:100%!important}' +
+    '}' +
+    '@media(max-width:500px){#home-stats{grid-template-columns:1fr!important}#sec-home h1{font-size:44px!important}}';
+  document.head.appendChild(_css);
+
+  // Override renderNav
   window.renderNav = function() {
     var navEl = document.getElementById('nav-root') || document.getElementById('main-nav');
     if (!navEl) return;
     navEl.innerHTML = '<nav><div style="max-width:1400px;margin:auto;padding:0 32px;display:flex;align-items:center;height:68px">' +
-      '<a onclick="goSec(\'home\')" style="cursor:pointer;text-decoration:none;flex-shrink:0"><span class="fd" style="font-size:34px;letter-spacing:2px">EIGHTBORN<b style=\'color:var(--v)\'>V</b></span></a>' +
+      '<a onclick="goSec(\'home\')" style="cursor:pointer;text-decoration:none;flex-shrink:0"><span class="fd" style="font-size:34px;letter-spacing:2px">EIGHTBORN<b style=\'color:var(--v)\'>V</b> ARENA</span></a>' +
       '<div class="nls" style="display:flex;gap:4px;margin-left:48px">' +
-        '<button class="nl" data-p="home" onclick="goSec(\'home\')">Ana Sayfa</button>' +
-        '<button class="nl" data-p="games" onclick="goSec(\'games\')">Oyunlar</button>' +
-        '<button class="nl" data-p="lb" onclick="goSec(\'lb\')">Sıralama</button>' +
-        '<button class="nl" data-p="contact" onclick="goSec(\'contact\')">Bize Ulaşın</button>' +
-        (typeof curUser!=='undefined'&&curUser&&curUser.role==='ADMIN'?'<button class="nl" data-p="admin" onclick="go(\'admin\')" style="color:var(--pk)">Admin</button>':'') +
+        '<button class="nl" data-p="home" onclick="goSec(\'home\')" style="font-size:16px;font-weight:700;padding:12px 20px;border:1px solid transparent;border-radius:10px">Ana Sayfa</button>' +
+        '<button class="nl" data-p="games" onclick="goSec(\'games\')" style="font-size:16px;font-weight:700;padding:12px 20px;border:1px solid transparent;border-radius:10px">Oyunlar</button>' +
+        '<button class="nl" data-p="lb" onclick="goSec(\'lb\')" style="font-size:16px;font-weight:700;padding:12px 20px;border:1px solid transparent;border-radius:10px">Sıralama</button>' +
+        '<button class="nl" data-p="contact" onclick="goSec(\'contact\')" style="font-size:16px;font-weight:700;padding:12px 20px;border:1px solid transparent;border-radius:10px">Bize Ulaşın</button>' +
+        (typeof curUser!=='undefined'&&curUser&&curUser.role==='ADMIN'?'<button class="nl" data-p="admin" onclick="go(\'admin\')" style="font-size:16px;font-weight:700;padding:12px 20px;color:var(--pk);border:1px solid transparent;border-radius:10px">Admin</button>':'') +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:10px;margin-left:auto">' +
-        '<a id="discord-link" href="#" target="_blank" style="display:none;font-size:14px;font-weight:700;padding:10px 22px;border-radius:10px;background:#5865F2;color:#fff;text-decoration:none;margin-right:12px">Discord</a>' +
+        '<a id="discord-link" href="#" target="_blank" style="display:none;font-size:16px;font-weight:700;padding:14px 32px;border-radius:12px;background:#5865F2;color:#fff;text-decoration:none;margin-right:12px;box-shadow:0 4px 16px rgba(88,101,242,.3)">Discord</a>' +
         (typeof curUser!=='undefined'&&curUser?
           '<div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:12px;background:var(--bg3)"><div style="width:36px;height:36px;border-radius:8px;background:rgba(232,67,62,.1);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--v)">'+(typeof esc==='function'?esc(curUser.username):'?')[0].toUpperCase()+'</div><span style="font-size:14px;font-weight:600">'+(typeof esc==='function'?esc(curUser.username):'')+'</span><button class="btn bg bsm" style="color:var(--pk);border:1px solid rgba(232,67,62,.2)" onclick="doLogout()">Çıkış</button></div>'
         :
-          '<button class="btn bs" style="padding:10px 22px" onclick="go(\'login\')">Giriş</button><button class="btn bp" style="padding:10px 22px" onclick="go(\'register\')">Kayıt Ol</button>'
+          '<button class="btn bs" style="padding:14px 32px;font-size:16px;border-radius:12px;border:1px solid #ffffff15;color:var(--t1)" onclick="go(\'login\')">Giriş</button><button class="btn bp" style="padding:14px 32px;font-size:16px;border-radius:12px;box-shadow:0 4px 16px rgba(232,67,62,.3)" onclick="go(\'register\')">Kayıt Ol</button>'
         ) +
       '</div>' +
     '</div></nav>';
     if(typeof loadDiscord==='function') loadDiscord();
   };
 
-  // goSec - scroll to section on home page
+  // goSec
   window.goSec = function(sec) {
-    _buildHome();
+    _bh();
     document.querySelectorAll('[id^="p-"]').forEach(function(e){e.classList.add('hid')});
     document.getElementById('p-home').classList.remove('hid');
     document.querySelectorAll('.nl').forEach(function(l){l.classList.remove('a')});
     document.querySelectorAll('.mob-nav a').forEach(function(a){a.classList.remove('on')});
-    var mobMap={home:0,games:1,lb:2,contact:3};
-    var idx=mobMap[sec];if(idx!==undefined){var ma=document.querySelectorAll('.mob-nav a');if(ma[idx])ma[idx].classList.add('on');}
+    var mm={home:0,games:1,lb:2,contact:3};var idx=mm[sec];
+    if(idx!==undefined){var ma=document.querySelectorAll('.mob-nav a');if(ma[idx])ma[idx].classList.add('on');}
     setTimeout(function(){
       var el=document.getElementById('sec-'+sec);
-      if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+      if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
       else window.scrollTo({top:0,behavior:'smooth'});
     },80);
-    if(sec==='lb'&&typeof rLB==='function') rLB();
+    if(sec==='lb'&&typeof rLB==='function')rLB();
   };
 
-  // Build home page content
-  function _buildHome() {
+  // Build home - exact demo layout
+  function _bh() {
     var ph=document.getElementById('p-home');
-    if(!ph||ph.dataset.built) return;
-    ph.dataset.built='1';
-    ph.className='pg';
-    ph.style.cssText='';
+    if(!ph||ph.dataset.built)return;
+    ph.dataset.built='1';ph.className='pg';ph.style.cssText='';
+
+    // Game cards HTML
+    var gamesHtml = _buildGameCards();
 
     ph.innerHTML =
-    '<div style="max-width:1400px;margin:auto;padding:72px 32px 56px;display:flex;align-items:center;gap:40px" id="sec-home">' +
-      '<div style="flex:0 0 420px">' +
+    // HERO
+    '<div class="w" style="max-width:1400px;margin:auto;padding:72px 32px 56px;display:flex;align-items:center;justify-content:space-between;gap:0" id="sec-home">' +
+      '<div class="ht" style="width:420px;flex-shrink:0;position:relative;z-index:2">' +
         '<div style="display:inline-block;font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--m);background:rgba(45,212,191,.08);padding:6px 16px;border-radius:8px;margin-bottom:20px">FiveM Roleplay Arenası</div>' +
-        '<h1 class="fd" style="font-size:clamp(52px,7vw,84px);line-height:.95;letter-spacing:2px;margin-bottom:18px">EIGHTBORN<span style="color:var(--v)">V</span><br>ARENA</h1>' +
-        '<p style="font-size:17px;color:var(--t2);line-height:1.7;max-width:460px;margin-bottom:28px">Karakterlerini ne kadar tanıyorsun? 8 farklı oyun modunda yeteneklerini test et, sıralamaya gir, chat ile yarış.</p>' +
-        '<div style="display:flex;gap:10px">' +
-          '<button class="btn bp" style="padding:14px 32px;font-size:16px;border-radius:12px" onclick="document.getElementById(\'sec-games\').scrollIntoView({behavior:\'smooth\'})">Oynamaya Başla</button>' +
-          '<button class="btn bs" style="padding:14px 32px;font-size:16px;border-radius:12px" onclick="document.getElementById(\'sec-games\').scrollIntoView({behavior:\'smooth\'})">Oyunlara Göz At</button>' +
+        '<h1 class="fd" style="font-size:clamp(52px,7vw,80px);line-height:.95;letter-spacing:2px;margin-bottom:18px">EIGHTBORN<span style="color:var(--v)">V</span><br>ARENA</h1>' +
+        '<p style="font-size:17px;color:var(--t2);line-height:1.7;margin-bottom:28px">Karakterlerini ne kadar tanıyorsun? 8 farklı oyun modunda yeteneklerini test et, sıralamaya gir, chat ile yarış.</p>' +
+        '<div class="hbtns" style="display:flex;gap:10px">' +
+          '<button class="btn bp" style="padding:14px 32px;font-size:16px;border-radius:12px;box-shadow:0 4px 16px rgba(232,67,62,.3)" onclick="document.getElementById(\'sec-games\').scrollIntoView({behavior:\'smooth\'})">Oynamaya Başla</button>' +
+          '<button class="btn bs" style="padding:14px 32px;font-size:16px;border-radius:12px;border:1px solid #ffffff15" onclick="document.getElementById(\'sec-games\').scrollIntoView({behavior:\'smooth\'})">Oyunlara Göz At</button>' +
         '</div>' +
       '</div>' +
-      '<div id="hero-img-container" style="flex:1;aspect-ratio:16/9;border-radius:18px;overflow:hidden;border:1px solid #ffffff08;position:relative;background:var(--bg2)">' +
+      '<div class="hi" style="width:52%;flex-shrink:0;aspect-ratio:16/9;border-radius:18px;overflow:hidden;border:1px solid #ffffff08;position:relative;background:var(--bg2)">' +
         '<svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block"><defs><filter id="bl"><feGaussianBlur stdDeviation="6"/></filter><filter id="bl2"><feGaussianBlur stdDeviation="3"/></filter><linearGradient id="hg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#12101a"/><stop offset="100%" stop-color="#0e0c16"/></linearGradient><linearGradient id="gr" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#2dd4bf"/><stop offset="100%" stop-color="#2dd4bf00"/></linearGradient><linearGradient id="rr" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#e8433e00"/><stop offset="100%" stop-color="#e8433e"/></linearGradient><clipPath id="cp1"><rect x="62" y="100" width="196" height="120" rx="12"/></clipPath><clipPath id="cp2"><rect x="382" y="100" width="196" height="120" rx="12"/></clipPath></defs><rect width="640" height="360" fill="url(#hg1)"/><rect x="16" y="12" width="608" height="36" rx="10" fill="#ffffff05" stroke="#ffffff08" stroke-width=".5"/><text x="32" y="35" font-family="Bebas Neue,sans-serif" font-size="16" fill="#f59e0b" letter-spacing="2">KIM HAYATTA KALACAK</text><rect x="490" y="18" width="56" height="24" rx="6" fill="#e8433e15" stroke="#e8433e40" stroke-width=".5"/><circle cx="502" cy="30" r="3.5" fill="#e8433e"><animate attributeName="opacity" values="1;.3;1" dur="1.5s" repeatCount="indefinite"/></circle><text x="514" y="34" font-family="Plus Jakarta Sans,sans-serif" font-size="10" font-weight="700" fill="#e8433e">TUR 5</text><rect x="556" y="18" width="56" height="24" rx="6" fill="#ffffff06"/><text x="584" y="34" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="10" font-weight="600" fill="#8a8898">4 / 8</text><text x="320" y="72" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="11" font-weight="600" fill="#4e4d5a" letter-spacing="3">SIRA KIMDE?</text><rect x="40" y="86" width="240" height="210" rx="16" fill="#18181e" stroke="#ffffff06" stroke-width=".5"/><image href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAuAFADASIAAhEBAxEB/8QAGQABAQEBAQEAAAAAAAAAAAAABAUDAgEA/8QALBAAAgIBAwMCBQQDAAAAAAAAAQIDEQAEEiExQVETIgUjMmFxFGKBobHR8P/EABcBAQEBAQAAAAAAAAAAAAAAAAIBAAP/xAAdEQADAAMAAwEAAAAAAAAAAAAAARECITESIkFh/9oADAMBAAIRAxEAPwCD60sddHGP0oecUiFmI+lRZwBQKxroTjNNYjBRip8g0RnHKHfGg5kZdRIrqVIPQgjON9ciNAPBN5Uljjl1G6QFrQEk9z5wkukUudpCLXXEmgOhvUfbW5R4rOWdmNs5OIMJhsGyB3BzZNJK4BEUp4u664lAv9ZPQAuBzzxiGpgFo2DWay6doZUEiMrHkbqzmNPnn7thyYsTxNK8gsUM3T4c56v/AFjIUAVg3tAPPas1jm00Vj1R9++amdpE3lgAexOL0xqLAkFSeeCeMTC9IMmQsGJnmcToFdK9MDr/ANznFs7llO8r1rjCTAq11w3fKPwRqWU1ZoDGkoc24w97mIKi8r6f4lBEu0kn27T7ehyI85RwOxPOes6hj7Fzc+m1lpoVr50mmRksgIQScOlFwe2cl1N+xf8AWfep9ICgUO2B7Hgpo1mchaBO3r+cl7vmDpW3sMc7koRhGo+bI44xLgX0eEnPSMKCe/GZx6YiYxluQl9KH4vPm1iSMWp1+wo/3nB1LxhmjJUkVZ5OVtESZ1qoZEUM3Cf4vGfAx8uU+SBklpne9zkk+TeL0evOkjKLEGs3ZNYkGQPMtsR+7Ffo9QQGWNipHGYxSqdQrulqDdZc086zoWQEAHvkZU4Rzp5x1jYfxmungBa5tu2uhajlZW3rY4z0nzzhiF5MnvpoBGzAXQvh8Dthv6Tf5yvqUX0JG2iwp7YTS6SDUaaOUqwZhRpsul0Ps+H/2Q==" x="62" y="90" width="196" height="140" clip-path="url(#cp1)" filter="url(#bl)" preserveAspectRatio="xMidYMid slice"/><rect x="120" y="230" width="80" height="12" rx="4" fill="#2a2a36" filter="url(#bl2)"/><rect x="100" y="250" width="120" height="8" rx="3" fill="#ffffff06"/><rect x="100" y="250" width="78" height="8" rx="3" fill="url(#gr)"/><text x="108" y="257" font-family="Plus Jakarta Sans,sans-serif" font-size="7" font-weight="700" fill="#000">%65</text><rect x="64" y="270" width="86" height="18" rx="5" fill="#2dd4bf12" stroke="#2dd4bf25" stroke-width=".5"/><text x="107" y="282" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="9" font-weight="700" fill="#2dd4bf">HAYATTA</text><rect x="302" y="162" width="36" height="36" rx="18" fill="#e8433e"/><text x="320" y="185" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="16" fill="#fff">VS</text><rect x="360" y="86" width="240" height="210" rx="16" fill="#18181e" stroke="#ffffff06" stroke-width=".5"/><image href="data:image/jpeg;base64,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" x="382" y="90" width="196" height="140" clip-path="url(#cp2)" filter="url(#bl)" preserveAspectRatio="xMidYMid slice"/><rect x="440" y="230" width="80" height="12" rx="4" fill="#2a2a36" filter="url(#bl2)"/><rect x="420" y="250" width="120" height="8" rx="3" fill="#ffffff06"/><rect x="498" y="250" width="42" height="8" rx="3" fill="url(#rr)"/><text x="532" y="257" text-anchor="end" font-family="Plus Jakarta Sans,sans-serif" font-size="7" font-weight="700" fill="#e8433e">%35</text><rect x="450" y="270" width="86" height="18" rx="5" fill="#e8433e10" stroke="#e8433e25" stroke-width=".5"/><text x="493" y="282" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="9" font-weight="700" fill="#e8433e">TEHLiKEDE</text><rect x="16" y="310" width="608" height="38" rx="10" fill="#ffffff04" stroke="#ffffff06" stroke-width=".5"/><rect x="26" y="318" width="280" height="22" rx="6" fill="#2dd4bf10"/><rect x="26" y="318" width="182" height="22" rx="6" fill="#2dd4bf"/><text x="36" y="333" font-family="Plus Jakarta Sans,sans-serif" font-size="10" font-weight="700" fill="#000">%65 OY</text><rect x="316" y="318" width="98" height="22" rx="6" fill="#e8433e"/><text x="370" y="333" font-family="Plus Jakarta Sans,sans-serif" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">%35 OY</text><text x="440" y="333" font-family="Plus Jakarta Sans,sans-serif" font-size="10" font-weight="600" fill="#4e4d5a">4 karakter kaldi</text><rect x="546" y="318" width="68" height="22" rx="6" fill="#e8433e"/><text x="580" y="333" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="11" font-weight="700" fill="#fff">OYNA</text></svg>' +
         '<div style="position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:6px"><div style="display:flex;align-items:center;gap:5px;background:#e8433e;padding:5px 10px;border-radius:6px"><div style="width:7px;height:7px;border-radius:50%;background:#fff;animation:blink 1.5s infinite"></div><span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:1px">LIVE</span></div><div style="background:rgba(0,0,0,.7);padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;color:#fff">\ud83d\udc41 1.2K izliyor</div></div>' +
         '<div style="position:absolute;top:14px;right:14px;display:flex;align-items:center;gap:6px"><div style="background:rgba(0,0,0,.7);padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;color:#fff">\ud83c\udfac Yayıncı Oyunu</div><div style="background:rgba(0,0,0,.7);padding:5px 10px;border-radius:6px;font-size:11px;color:#e8433e;font-weight:700">REC \u25cf</div></div>' +
         '<div style="position:absolute;bottom:12px;left:14px;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.75);padding:8px 14px;border-radius:8px"><div style="width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#e8433e,#ff6b4a);display:flex;align-items:center;justify-content:center;font-size:14px">\ud83c\udfae</div><div style="font-size:12px;font-weight:700;color:#fff">EightbornV Arena</div></div>' +
-        '<div style="position:absolute;bottom:12px;right:14px;background:rgba(0,0,0,.75);padding:8px 14px;border-radius:8px;font-size:11px;font-weight:600;color:#2dd4bf">\ud83d\udcac Chat Aktif — 342 mesaj</div>' +
+        '<div style="position:absolute;bottom:12px;right:14px;background:rgba(0,0,0,.75);padding:8px 14px;border-radius:8px;font-size:11px;font-weight:600;color:#2dd4bf">\ud83d\udcac Chat Aktif \u2014 342 mesaj</div>' +
       '</div>' +
     '</div>' +
 
-    '<div style="max-width:1400px;margin:0 auto;padding:16px 32px 0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px" id="stats-bar">' +
+    // STATS
+    '<div style="max-width:1400px;margin:0 auto;padding:16px 32px 0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px" id="home-stats">' +
       '<div class="card" style="padding:24px 26px;display:flex;align-items:center;gap:16px"><div style="width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(232,67,62,.1);color:var(--v);flex-shrink:0">\u2694\ufe0f</div><div><div class="fd" style="font-size:36px;line-height:1">218+</div><div style="font-size:14px;color:var(--t2);margin-top:2px">Toplam Karakter</div></div></div>' +
       '<div class="card" style="padding:24px 26px;display:flex;align-items:center;gap:16px"><div style="width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(45,212,191,.1);color:var(--m);flex-shrink:0">\ud83c\udfae</div><div><div class="fd" style="font-size:36px;line-height:1">2,500+</div><div style="font-size:14px;color:var(--t2);margin-top:2px">Toplam Oynama</div></div></div>' +
       '<div class="card" style="padding:24px 26px;display:flex;align-items:center;gap:16px"><div style="width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(245,158,11,.1);color:#f59e0b;flex-shrink:0">\ud83c\udfc6</div><div><div class="fd" style="font-size:36px;line-height:1">45,000+</div><div style="font-size:14px;color:var(--t2);margin-top:2px">Kazanılan Puan</div></div></div>' +
       '<div class="card" style="padding:24px 26px;display:flex;align-items:center;gap:16px"><div style="width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(139,92,246,.1);color:#8b5cf6;flex-shrink:0">\ud83d\udcca</div><div><div class="fd" style="font-size:36px;line-height:1">8</div><div style="font-size:14px;color:var(--t2);margin-top:2px">Oyun Modu</div></div></div>' +
     '</div></div>' +
 
-    '<div style="max-width:1400px;margin:auto;padding:56px 32px" id="sec-games"><div style="display:flex;align-items:center;gap:14px;margin-bottom:28px"><h2 class="fd" style="font-size:34px;letter-spacing:2px">OYUNLAR</h2><div style="flex:1;height:1px;background:#ffffff06"></div><div style="font-size:14px;font-weight:700;color:var(--t3);background:var(--bg3);padding:6px 14px;border-radius:8px">8 mod</div></div><div id="hg2"></div></div>' +
+    // GAMES
+    '<div style="max-width:1400px;margin:auto;padding:56px 32px 0" id="sec-games">' +
+      '<div style="display:flex;align-items:center;gap:14px;margin-bottom:28px"><h2 class="fd" style="font-size:38px;letter-spacing:2px">OYUNLAR</h2><div style="flex:1;height:1px;background:#ffffff06"></div><div style="font-size:14px;font-weight:700;color:var(--t3);background:var(--bg3);padding:6px 14px;border-radius:8px">8 mod</div></div>' +
+      '<div class="home-games-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">' + gamesHtml + '</div>' +
+    '</div>' +
 
-    '<div style="max-width:1400px;margin:auto;padding:56px 32px" id="sec-lb">' +
-    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:28px"><h2 class="fd" style="font-size:34px;letter-spacing:2px">SIRALAMA</h2><div style="flex:1;height:1px;background:#ffffff06"></div></div>' +
-    '<div id="lbt"></div></div>' +
+    // LEADERBOARD
+    '<div style="max-width:1400px;margin:auto;padding:56px 32px 0" id="sec-lb">' +
+      '<div style="display:flex;align-items:center;gap:14px;margin-bottom:28px"><h2 class="fd" style="font-size:38px;letter-spacing:2px">SIRALAMA</h2><div style="flex:1;height:1px;background:#ffffff06"></div></div>' +
+      '<div id="lbt"></div>' +
+    '</div>' +
 
-    '<div style="max-width:1400px;margin:auto;padding:48px 32px" id="sec-contact"><div style="background:var(--bg2);border:1px solid #ffffff06;border-radius:20px;padding:60px;display:flex;gap:60px;align-items:flex-start"><div style="flex:1"><h2 class="fd" style="font-size:52px;letter-spacing:2px;margin-bottom:12px">BİZE ULAŞIN</h2><p style="font-size:17px;color:var(--t2);line-height:1.7">Sorularınız, önerileriniz veya hata bildirimleri için bize yazabilirsiniz. En kısa sürede dönüş yapacağız.</p></div><div style="flex:1;max-width:480px"><label class="lbl">Konu Başlığı</label><input class="inp" id="contact-title" placeholder="Örn: Karakter Fotoğrafı Hatası" maxlength="100"><label class="lbl" style="margin-top:4px">Açıklama</label><textarea class="inp" id="contact-desc" rows="5" placeholder="Detaylandırın..." maxlength="1000" style="min-height:150px"></textarea><button class="btn bp" style="width:100%;padding:16px;font-size:16px;border-radius:12px;margin-top:8px" onclick="sendContact()">Gönder</button></div></div></div>';
+    // CONTACT
+    '<div style="max-width:1400px;margin:auto;padding:48px 32px 56px" id="sec-contact"><div style="background:var(--bg2);border:1px solid #ffffff06;border-radius:20px;padding:60px;display:flex;gap:60px;align-items:flex-start"><div style="flex:1"><h2 class="fd" style="font-size:52px;letter-spacing:2px;margin-bottom:12px">BİZE ULAŞIN</h2><p style="font-size:17px;color:var(--t2);line-height:1.7">Sorularınız, önerileriniz veya hata bildirimleri için bize yazabilirsiniz. En kısa sürede dönüş yapacağız.</p></div><div style="flex:1;max-width:480px"><label class="lbl">Konu Başlığı</label><input class="inp" id="contact-title" placeholder="Örn: Karakter Fotoğrafı Hatası" maxlength="100"><label class="lbl" style="margin-top:4px">Açıklama</label><textarea class="inp" id="contact-desc" rows="5" placeholder="Detaylandırın..." maxlength="1000" style="min-height:150px"></textarea><button class="btn bp" style="width:100%;padding:16px;font-size:16px;border-radius:12px;margin-top:8px" onclick="sendContact()">Gönder</button></div></div></div>';
 
-    // Fill game cards
-    if(typeof gcH==='function'){var hg2=document.getElementById('hg2');if(hg2)hg2.innerHTML=gcH();}
-    // Load leaderboard
     if(typeof rLB==='function') setTimeout(rLB,500);
   }
 
-  // Inject responsive CSS
-  var rs=document.createElement('style');
-  rs.textContent='@media(max-width:900px){#sec-home{flex-direction:column!important;padding:48px 24px 32px!important;text-align:center;gap:32px!important}#sec-home>div:first-child p{margin:0 auto 24px}#sec-home>div:first-child>div:last-child{justify-content:center}#hero-img-container{min-width:0!important;width:100%!important;flex:none!important}#stats-bar{grid-template-columns:1fr 1fr!important}#sec-contact>div{flex-direction:column!important;padding:36px!important;gap:28px!important}#sec-contact>div>div:last-child{max-width:100%!important;width:100%!important}.nls{display:none!important}}@media(max-width:500px){#stats-bar{grid-template-columns:1fr!important}#sec-home h1{font-size:44px!important}}';
-  document.head.appendChild(rs);
+  // Build game cards for home page with new style
+  function _buildGameCards() {
+    var games = [
+      {e:'\u2694\ufe0f',t:'DIE',n:'Kim Hayatta Kalacak',d:'Karakterler birer birer eleniyor — sonuna kim kalacak?',diff:'Kolay',dc:'rgba(45,212,191,.08);color:#2dd4bf',ib:'rgba(245,158,11,.1)'},
+      {e:'\ud83d\udc65',t:'TEAM',n:'Ekibini Kur',d:'Hayalindeki dream team\'i oluştur ve paylaş',diff:'Kolay',dc:'rgba(45,212,191,.08);color:#2dd4bf',ib:'rgba(139,92,246,.1)'},
+      {e:'\ud83d\udcac',t:'QUOTE',n:'Replik Bil',d:'Efsane replikler — kime ait olduğunu tahmin et',diff:'Zor',dc:'rgba(232,67,62,.08);color:#e8433e',ib:'rgba(245,158,11,.1)'},
+      {e:'\ud83c\udfb2',t:'FATE',n:'Kaderini Seç',d:'Öldür, evlen, ghostla, kaç — kaderi sen belirle',diff:'Kolay',dc:'rgba(45,212,191,.08);color:#2dd4bf',ib:'rgba(232,67,62,.1)'},
+      {e:'\ud83e\udd14',t:'FACE',n:'Yüzden Bil',d:'Bulanık fotoğraftan karakterin kim olduğunu bul',diff:'Zor',dc:'rgba(232,67,62,.08);color:#e8433e',ib:'rgba(45,212,191,.1)'},
+      {e:'\ud83e\udde0',t:'MEM',n:'Eightborn Moruq',d:'Sunucu hakkında ne kadar bilgilisin? Test et',diff:'Çok Zor',dc:'rgba(232,67,62,.08);color:#e8433e',ib:'rgba(96,165,250,.1)'},
+      {e:'\u2753',t:'WHO',n:'Sen Kimsin?',d:'Kişilik testine gir — hangi karaktere benziyorsun?',diff:'KEŞFET!',dc:'rgba(139,92,246,.08);color:#8b5cf6',ib:'rgba(139,92,246,.1)'},
+      {e:'\ud83c\udfac',t:'STREAM',n:'Yayıncı Oyunları',d:'Chat ile interaktif 7 farklı oyun modu',diff:'İNTERAKTİF !',dc:'rgba(232,67,62,.08);color:#e8433e',ib:'rgba(232,67,62,.12)',str:true}
+    ];
+    return games.filter(function(g){
+      var gd=GD.find(function(x){return x.t===g.t});
+      return gd&&gd.on;
+    }).map(function(g){
+      return '<div class="gc-new'+(g.str?' str':'')+'" onclick="playDirect(\''+g.t+'\')">' +
+        (g.str?'<div class="ltag">CANLI YAYIN</div>':'') +
+        '<div class="gc-i" style="background:'+g.ib+'">'+g.e+'</div>' +
+        '<h3>'+g.n+'</h3><p>'+g.d+'</p>' +
+        '<span class="diff" style="background:'+g.dc+'">'+g.diff+'</span></div>';
+    }).join('');
+  }
 
   // Inject mobile nav
   if(!document.querySelector('.mob-nav')){var mn=document.createElement('div');mn.className='mob-nav';mn.innerHTML='<div class="mob-nav-inner"><a href="#" class="on" onclick="goSec(\'home\');return false"><span>\u26a1</span>Anasayfa</a><a href="#" onclick="goSec(\'games\');return false"><span>\ud83c\udfae</span>Oyunlar</a><a href="#" onclick="goSec(\'lb\');return false"><span>\ud83c\udfc6</span>Sıralama</a><a href="#" onclick="goSec(\'contact\');return false"><span>\ud83d\udcec</span>İletişim</a><a href="#" onclick="go(\'login\');return false"><span>\ud83d\udc64</span>Profil</a></div>';document.body.appendChild(mn);}
 
-  // Override go to redirect home/lb/contact to goSec
-  var _origGo = window.go;
-  window.go = function(pg) {
-    if(pg==='home'||pg==='lb'||pg==='contact') { goSec(pg); return; }
-    if(typeof _origGo==='function') _origGo(pg);
-  };
+  // Override go
+  var _og=window.go;
+  window.go=function(pg){if(pg==='home'||pg==='lb'||pg==='contact'){goSec(pg);return;}if(typeof _og==='function')_og(pg);};
 
   // Build and render
   renderNav();
-  _buildHome();
+  _bh();
 });
