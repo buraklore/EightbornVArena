@@ -26,7 +26,7 @@ document.getElementById('hg').innerHTML=gcH();document.getElementById('gg').inne
 // Play from any page
 function playDirect(t){
   // Hide all pages
-  document.querySelectorAll('[id^="p-"]').forEach(function(e){e.classList.add('hid')});
+  document.querySelectorAll('[id^="p-"]').forEach(function(e){e.classList.add('hid');e.style.display='none'});
   // Show games page
   var gp=document.getElementById('p-games');
   if(gp){gp.classList.remove('hid');gp.style.display='';}
@@ -128,8 +128,8 @@ window.addEventListener('load', function() {
   // goSec
   window.goSec = function(sec) {
     _bh();
-    document.querySelectorAll('[id^="p-"]').forEach(function(e){e.classList.add('hid')});
-    document.getElementById('p-home').classList.remove('hid');
+    document.querySelectorAll('[id^="p-"]').forEach(function(e){e.classList.add('hid');e.style.display='none'});
+    var _ph=document.getElementById('p-home');_ph.classList.remove('hid');_ph.style.display='block';
     document.querySelectorAll('.nl').forEach(function(l){l.classList.remove('a')});
     document.querySelectorAll('.mob-nav a').forEach(function(a){a.classList.remove('on')});
     var mm={home:0,games:1,lb:2,contact:3};var idx=mm[sec];
@@ -146,7 +146,7 @@ window.addEventListener('load', function() {
   function _bh() {
     var ph=document.getElementById('p-home');
     if(!ph||ph.dataset.built)return;
-    ph.dataset.built='1';ph.className='pg';ph.style.cssText='';
+    ph.dataset.built='1';ph.className='pg';ph.style.cssText='display:block;padding:0;';
 
     // Game cards HTML
     var gamesHtml = _buildGameCards();
@@ -245,6 +245,9 @@ window.addEventListener('load', function() {
   window.go=function(pg){
     if(pg==='home'||pg==='lb'||pg==='contact'){goSec(pg);return;}
     // For games, admin, login, register - use original go
+    // First make sure p-home is hidden
+    var _ph=document.getElementById('p-home');
+    if(_ph)_ph.style.display='none';
     if(typeof _origGo==='function'){
       try{_origGo(pg);}catch(e){console.error('go error:',e);}
     }
