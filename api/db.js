@@ -205,6 +205,11 @@ async function setDiscordLink(link) {
 }
 
 async function getTimedLeaderboard(period) {
+  if (period === 'alltime') {
+    // For alltime, use users.best_score (includes admin edits) + game_scores count
+    var r = await query("SELECT u.id as user_id, u.username, u.best_score as total_score, COALESCE(g.cnt, 0) as games_played FROM users u LEFT JOIN (SELECT user_id, COUNT(*) as cnt FROM game_scores GROUP BY user_id) g ON g.user_id = u.id WHERE u.best_score > 0 ORDER BY u.best_score DESC LIMIT 50");
+    return r.rows;
+  }
   var dateFilter = '';
   if (period === 'daily') dateFilter = "AND gs.played_at >= NOW() - INTERVAL '1 day'";
   else if (period === 'weekly') dateFilter = "AND gs.played_at >= NOW() - INTERVAL '7 days'";
