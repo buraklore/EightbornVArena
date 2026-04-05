@@ -1,4 +1,5 @@
 function showGameNotif(emoji,text,isGood){var old=document.getElementById("game-notif");if(old)old.remove();var n=document.createElement("div");n.id="game-notif";var bg=isGood?"rgba(45,212,191,0.15)":"rgba(232,67,62,0.15)";var border=isGood?"rgba(45,212,191,0.3)":"rgba(232,67,62,0.3)";var color=isGood?"var(--m)":"#e8433e";n.style.cssText="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;text-align:center;padding:28px 56px;border-radius:20px;background:"+bg+";border:2px solid "+border+";backdrop-filter:blur(12px)";n.innerHTML='<div style="font-size:48px;margin-bottom:8px">'+emoji+'</div><div style="font-size:24px;font-weight:700;color:'+color+'">'+text+'</div>';document.body.appendChild(n);setTimeout(function(){var el=document.getElementById("game-notif");if(el)el.remove()},1500)}
+function showGameNotif(emoji,text,isGood){var old=document.getElementById("game-notif");if(old)old.remove();var n=document.createElement("div");n.id="game-notif";var bg=isGood?"rgba(45,212,191,0.15)":"rgba(232,67,62,0.15)";var border=isGood?"rgba(45,212,191,0.3)":"rgba(232,67,62,0.3)";var color=isGood?"var(--m)":"#e8433e";n.style.cssText="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;text-align:center;padding:28px 56px;border-radius:20px;background:"+bg+";border:2px solid "+border+";backdrop-filter:blur(12px)";n.innerHTML='<div style="font-size:48px;margin-bottom:8px">'+emoji+'</div><div style="font-size:24px;font-weight:700;color:'+color+'">'+text+'</div>';document.body.appendChild(n);setTimeout(function(){var el=document.getElementById("game-notif");if(el)el.remove()},1500)}
 // ═══════════════════════════════════════════════════
 // YÜZDEN BİL — FACE GUESS GAME
 // ═══════════════════════════════════════════════════
@@ -104,7 +105,8 @@ function faceGuess() {
   s.picking = true;
   const c = s.remaining[0];
   const correct = (c.n + ' ' + c.s).toLowerCase();
-  const isCorrect = answer === correct;
+  const firstName = c.n.toLowerCase().trim();
+  const isCorrect = answer === correct || answer.toLowerCase().trim() === firstName;
   
   // Reveal photo
   const img = document.getElementById('face-img');
