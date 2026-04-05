@@ -574,7 +574,15 @@ function aGameEdit(e){
     {t:'FACE',n:'Yüzden Bil',d:'Bulanık fotoğraftan tanı'},
     {t:'MEM',n:'Eightborn Moruq',d:'Sunucu bilgi yarışması'},
     {t:'WHO',n:'Sen Kimsin?',d:'Hangi karaktere benziyorsun?'},
-    {t:'STREAM',n:'Yayıncı Oyunları',d:'Chat ile interaktif oyunlar'}
+    {t:'STREAM',n:'Yayıncı Oyunları',d:'Chat ile interaktif oyunlar'}];
+  var streamerTypes = [
+    {t:'S_QUOTE',n:'Replik Bil (Yayıncı)',d:'Repliği kime ait?'},
+    {t:'S_FACE',n:'Yüzden Bil (Yayıncı)',d:'Karakteri tanı!'},
+    {t:'S_MEMORY',n:'Eightborn Moruq (Yayıncı)',d:'Bilgini test et'},
+    {t:'S_STORY',n:'Chat Kaderini Belirler',d:'Hikayeni chat belirler'},
+    {t:'S_CDIE',n:'Kim Hayatta Kalacak (Yayıncı)',d:'Chat CK belirler'},
+    {t:'S_CTEAM',n:'Ekibini Kur (Yayıncı)',d:'Ekibi chat belirler'},
+    {t:'S_CFATE',n:'Kaderini Seç (Yayıncı)',d:'Kaderi chat belirler'}
   ];
   
   // Load saved names from config
@@ -590,6 +598,14 @@ function aGameEdit(e){
         '<div class="form-group"><label class="lbl">Açıklama</label><input class="inp" id="gd-'+g.t+'" value="'+sd.replace(/"/g,'&quot;')+'" placeholder="'+g.d+'"></div></div></div>';
     });
     
+    h += '<div style="margin:24px 0 16px;border-top:1px solid #ffffff08;padding-top:16px"><h3 class="fd" style="font-size:15px">🎬 Yayıncı Oyunları İçeriği</h3></div>';
+    streamerTypes.forEach(function(g){
+      var sn = saved[g.t+'_name'] || g.n;
+      var sd = saved[g.t+'_desc'] || g.d;
+      h += '<div class="card" style="padding:16px;margin-bottom:8px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:20px">🎬</span><strong style="font-size:14px">' + g.t + '</strong></div>' +
+        '<div class="form-row"><div class="form-group"><label class="lbl">Oyun Adı</label><input class="inp" id="gn-'+g.t+'" value="'+sn.replace(/"/g,'&quot;')+'" placeholder="'+g.n+'"></div>' +
+        '<div class="form-group"><label class="lbl">Açıklama</label><input class="inp" id="gd-'+g.t+'" value="'+sd.replace(/"/g,'&quot;')+'" placeholder="'+g.d+'"></div></div></div>';
+    });
     h += '<button class="btn bp" style="margin-top:12px;width:100%;padding:14px" onclick="saveGameNames()">💾 Tümünü Kaydet</button>';
     e.innerHTML = h;
   }).catch(function(){
@@ -598,7 +614,7 @@ function aGameEdit(e){
 }
 
 function saveGameNames(){
-  var types = ['DIE','TEAM','QUOTE','FATE','FACE','MEM','WHO','STREAM'];
+  var types = ['DIE','TEAM','QUOTE','FATE','FACE','MEM','WHO','STREAM','S_QUOTE','S_FACE','S_MEMORY','S_STORY','S_CDIE','S_CTEAM','S_CFATE'];
   var data = {};
   types.forEach(function(t){
     var nameEl = document.getElementById('gn-'+t);
