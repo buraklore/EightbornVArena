@@ -18,7 +18,8 @@ function auth(req, res, next) { var token = null; if (req.cookies && req.cookies
 function adm(req, res, next) { if (!req.user || req.user.role !== 'ADMIN') return res.status(403).json({ error: 'Admin yetkisi gerekli.' }); next(); }
 function setCookie(res, user) { res.cookie('ebv_token', generateToken(user), { httpOnly: true, secure: true, sameSite: 'lax', maxAge: 604800000 }); }
 
-app.get('/api/init', async function(req, res) { try { await ensureDb(); var ch = await db.getAllCharacters(false); var qq = await db.getAllQuestions(); var wq = await db.getAllWhoQuestions(); var gc = await db.getConfig('games'); var del = await db.getConfig('deleted_chars'); var ads = await db.getConfig('ads_config'); var rqs = await db.getConfig('replaced_qs'); var discord = await db.getDiscordLink(); var heroImg = await db.getConfig("hero_image"); res.json({ characters: ch, quizQuestions: qq, whoQuestions: wq, gameConfig: gc ? JSON.parse(gc) : null, deleted_chars: del || null, ads_config: ads || null, replaced_qs: rqs || null, discord: discord || "", hero_image: heroImg || "" }); } catch (e) { console.error(e.message); res.status(500).json({ error: 'Init failed.' }); } });
+app.get('/api/init', async function(req, res) { try { await ensureDb(); var ch = await db.getAllCharacters(false); var qq = await db.getAllQuestions(); var wq = await db.getAllWhoQuestions(); var gc = await db.getConfig('games'); var del = await db.getConfig('deleted_chars'); var ads = await db.getConfig('ads_config'); var rqs = await db.getConfig('replaced_qs'); var discord = await db.getDiscordLink(); var heroImg = await db.getConfig("hero_image");
+    var gnR = await db.query("SELECT key, value FROM game_config WHERE key LIKE 'game_%'"); var gameNames = {}; gnR.rows.forEach(function(r){ gameNames[r.key.replace('game_','')] = r.value; }); res.json({ characters: ch, quizQuestions: qq, whoQuestions: wq, gameConfig: gc ? JSON.parse(gc) : null, deleted_chars: del || null, ads_config: ads || null, replaced_qs: rqs || null, discord: discord || "", hero_image: heroImg || "", game_names: gameNames || {} }); } catch (e) { console.error(e.message); res.status(500).json({ error: 'Init failed.' }); } });
 
 app.post('/api/auth/register', async function(req, res) { try { await ensureDb(); var username = (req.body.username || '').trim().substring(0, 20); var email = (req.body.email || '').trim().substring(0, 100).toLowerCase(); var password = (req.body.password || '').trim(); if (!username || !email || !password) return res.status(400).json({ error: 'Tum alanlari doldur.' }); if (username.length < 3 || !/^[a-zA-Z0-9_]+$/.test(username)) return res.status(400).json({ error: 'Kullanici adi 3-20 karakter.' }); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Gecerli e-posta gir.' }); if (password.length < 4 || password.length > 50) return res.status(400).json({ error: 'Sifre 4-50 karakter.' }); if (await db.findUserByEmail(email) || await db.findUserByUsername(username)) return res.status(400).json({ error: 'Bu bilgilerle kayit yapilamiyor.' }); var userId = await db.createUser(username, email, password); var user = await db.findUserById(userId); setCookie(res, user); res.json({ user: { id: user.id, username: user.username, role: user.role, best_score: 0, games_played: 0 } }); } catch (e) { console.error(e.message); res.status(500).json({ error: 'Kayit basarisiz.' }); } });
 app.post('/api/auth/login', async function(req, res) { try { await ensureDb(); var email = (req.body.email || '').trim().toLowerCase(); var password = (req.body.password || '').trim(); if (!email || !password) return res.status(400).json({ error: 'E-posta ve sifre gerekli.' }); var user = await db.findUserByEmail(email); if (!user) user = await db.findUserByUsername(email); if (!user || !db.verifyPassword(password, user.password)) return res.status(401).json({ error: 'E-posta veya sifre hatali.' }); if (user.banned) return res.status(403).json({ error: 'Hesabiniz yasaklanmistir.' }); setCookie(res, user); res.json({ user: { id: user.id, username: user.username, role: user.role, best_score: user.best_score, games_played: user.games_played } }); } catch (e) { console.error(e.message); res.status(500).json({ error: 'Giris basarisiz.' }); } });
@@ -138,3 +139,24 @@ app.get('/api/scores/timed-leaderboard', async function(req, res) { try { await 
 
 app.get('/api/hero-image', async function(req, res) { try { await ensureDb(); var img = await db.getConfig('hero_image'); res.json({ image: img || '' }); } catch(e) { res.json({ image: '' }); } });
 app.post('/api/hero-image', auth, adm, async function(req, res) { try { await ensureDb(); await db.setConfig('hero_image', req.body.image || ''); res.json({ success: true }); } catch(e) { res.status(500).json({ error: 'Kaydedilemedi.' }); } });
+
+app.get('/api/game-names', async function(req, res) {
+  try {
+    await ensureDb();
+    var r = await db.query("SELECT key, value FROM game_config WHERE key LIKE 'game_%'");
+    var games = {};
+    r.rows.forEach(function(row){ games[row.key.replace('game_','')] = row.value; });
+    res.json({ games: games });
+  } catch(e) { res.json({ games: {} }); }
+});
+
+app.post('/api/game-names', auth, adm, async function(req, res) {
+  try {
+    await ensureDb();
+    var games = req.body.games || {};
+    for (var key in games) {
+      await db.setConfig('game_' + key, games[key]);
+    }
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: 'Kaydedilemedi.' }); }
+});
