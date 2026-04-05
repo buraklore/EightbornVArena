@@ -1,6 +1,6 @@
 // ═══ ADMIN (simplified for focus on tournament) ═══
-const AT=[{k:'chars',l:'Karakterler',i:'⚔️'},{k:'questions',l:'Sorular',i:'❓'},{k:'games',l:'Oyunlar',i:'🎮'},{k:'ranking',l:'Sıralama',i:'🏆'},{k:'users',l:'Kullanıcılar',i:'👤'},{k:'ads',l:'Reklamlar',i:'📢'},{k:'msgs',l:'Mesajlar',i:'📨'},{k:'hero',l:'Hero Görseli',i:'🖼️'},{k:'discord',l:'Discord',i:'🎮'}];
-function rAdm(){document.getElementById('adm-nav').innerHTML=AT.map(t=>'<button class="nl'+(aTab===t.k?' a':'')+'" style="justify-content:flex-start;width:100%;font-size:15px;padding:12px 16px" onclick="aTab=\''+t.k+'\';rAdm()">'+t.i+' '+t.l+'</button>').join('');const e=document.getElementById('adm-c');({chars:aChars,questions:aQuestions,games:aGames,ranking:aRanking,users:aUsers,ads:aAds,msgs:aMsgs,hero:aHero,discord:aDiscord})[aTab](e)}
+const AT=[{k:'chars',l:'Karakterler',i:'⚔️'},{k:'questions',l:'Sorular',i:'❓'},{k:'games',l:'Oyunlar',i:'🎮'},{k:'ranking',l:'Sıralama',i:'🏆'},{k:'users',l:'Kullanıcılar',i:'👤'},{k:'ads',l:'Reklamlar',i:'📢'},{k:'msgs',l:'Mesajlar',i:'📨'},{k:'gameedit',l:'Oyun Düzenle',i:'✏️'},{k:'hero',l:'Hero Görseli',i:'🖼️'},{k:'discord',l:'Discord',i:'🎮'}];
+function rAdm(){document.getElementById('adm-nav').innerHTML=AT.map(t=>'<button class="nl'+(aTab===t.k?' a':'')+'" style="justify-content:flex-start;width:100%;font-size:15px;padding:12px 16px" onclick="aTab=\''+t.k+'\';rAdm()">'+t.i+' '+t.l+'</button>').join('');const e=document.getElementById('adm-c');({chars:aChars,questions:aQuestions,games:aGames,ranking:aRanking,users:aUsers,ads:aAds,msgs:aMsgs,gameedit:aGameEdit,hero:aHero,discord:aDiscord})[aTab](e)}
 
 function aChars(e){
   if(!window._dataLoaded){
@@ -563,4 +563,51 @@ function saveHeroImage(){
     toast('Hero görseli kaydedildi!');
     aHero(document.getElementById('adm-c'));
   });
+}
+
+function aGameEdit(e){
+  var gameTypes = [
+    {t:'DIE',n:'Kim Hayatta Kalacak',d:'Son hayatta kalan kim?'},
+    {t:'TEAM',n:'Ekibini Kur',d:'8 kişilik ekibini oluştur'},
+    {t:'QUOTE',n:'Replik Bil',d:'Bu repliğin hangi karaktere ait?'},
+    {t:'FATE',n:'Kaderini Seç',d:'Öldür, evlen, ghostla, kaç'},
+    {t:'FACE',n:'Yüzden Bil',d:'Bulanık fotoğraftan tanı'},
+    {t:'MEM',n:'Eightborn Moruq',d:'Sunucu bilgi yarışması'},
+    {t:'WHO',n:'Sen Kimsin?',d:'Hangi karaktere benziyorsun?'},
+    {t:'STREAM',n:'Yayıncı Oyunları',d:'Chat ile interaktif oyunlar'}
+  ];
+  
+  // Load saved names from config
+  apiGet('/game-names').then(function(r){
+    var saved = r.games || {};
+    var h = '<div style="margin-bottom:16px"><h3 class="fd" style="font-size:15px">✏️ Oyun İsim ve Açıklamalarını Düzenle</h3><p style="font-size:12px;color:var(--t2);margin-top:4px">Ana sayfa ve Yayıncı Oyunları sayfasında görünen isim ve açıklamalar</p></div>';
+    
+    gameTypes.forEach(function(g){
+      var sn = saved[g.t+'_name'] || g.n;
+      var sd = saved[g.t+'_desc'] || g.d;
+      h += '<div class="card" style="padding:16px;margin-bottom:8px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="font-size:20px">' + (GD.find(function(x){return x.t===g.t})||{e:'🎮'}).e + '</span><strong style="font-size:14px">' + g.t + '</strong></div>' +
+        '<div class="form-row"><div class="form-group"><label class="lbl">Oyun Adı</label><input class="inp" id="gn-'+g.t+'" value="'+sn.replace(/"/g,'&quot;')+'" placeholder="'+g.n+'"></div>' +
+        '<div class="form-group"><label class="lbl">Açıklama</label><input class="inp" id="gd-'+g.t+'" value="'+sd.replace(/"/g,'&quot;')+'" placeholder="'+g.d+'"></div></div></div>';
+    });
+    
+    h += '<button class="btn bp" style="margin-top:12px;width:100%;padding:14px" onclick="saveGameNames()">💾 Tümünü Kaydet</button>';
+    e.innerHTML = h;
+  }).catch(function(){
+    e.innerHTML = '<div class="card" style="padding:24px;text-align:center;color:var(--pk)">Yüklenemedi</div>';
+  });
+}
+
+function saveGameNames(){
+  var types = ['DIE','TEAM','QUOTE','FATE','FACE','MEM','WHO','STREAM'];
+  var data = {};
+  types.forEach(function(t){
+    var nameEl = document.getElementById('gn-'+t);
+    var descEl = document.getElementById('gd-'+t);
+    if(nameEl && nameEl.value.trim()) data[t+'_name'] = nameEl.value.trim();
+    if(descEl && descEl.value.trim()) data[t+'_desc'] = descEl.value.trim();
+  });
+  apiPost('/game-names', {games:data}).then(function(r){
+    if(r.error){toast(r.error,false);return}
+    toast('Oyun isimleri kaydedildi! Sayfa yenilenince uygulanır.');
+  }).catch(function(){toast('Kaydedilemedi!',false)});
 }
