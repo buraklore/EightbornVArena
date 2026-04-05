@@ -196,6 +196,18 @@ window.addEventListener('load', function() {
     '<div style="max-width:1400px;margin:auto;padding:48px 32px 56px" id="sec-contact"><div style="background:var(--bg2);border:1px solid #ffffff06;border-radius:20px;padding:60px;display:flex;gap:60px;align-items:flex-start"><div style="flex:1"><h2 class="fd" style="font-size:52px;letter-spacing:2px;margin-bottom:12px">BİZE ULAŞIN</h2><p style="font-size:17px;color:var(--t2);line-height:1.7">Sorularınız, önerileriniz veya hata bildirimleri için bize yazabilirsiniz. En kısa sürede dönüş yapacağız.</p></div><div style="flex:1;max-width:480px"><label class="lbl">Konu Başlığı</label><input class="inp" id="contact-title" placeholder="Örn: Karakter Fotoğrafı Hatası" maxlength="100"><label class="lbl" style="margin-top:4px">Açıklama</label><textarea class="inp" id="contact-desc" rows="5" placeholder="Detaylandırın..." maxlength="1000" style="min-height:150px"></textarea><button class="btn bp" style="width:100%;padding:16px;font-size:16px;border-radius:12px;margin-top:8px" onclick="sendContact()">Gönder</button></div></div></div>';
 
     if(typeof rLB==='function') setTimeout(rLB,500);
+    // Apply custom game names from API
+    if(typeof apiGet==='function'){
+      apiGet('/game-names').then(function(r){
+        var gn=r.games||{};
+        window._customGameNames=gn;
+        // Update home page game card names
+        document.querySelectorAll('.gc-new h3, .gc-new p').forEach(function(el){});
+        // Re-render home game cards with custom names
+        var hg2=document.getElementById('hg2');
+        if(hg2&&typeof _buildGameCards==='function') hg2.innerHTML=_buildGameCards();
+      }).catch(function(){});
+    }
     // Load real stats
     if(typeof apiGet==='function'){
       apiGet('/init').then(function(r){
@@ -214,7 +226,7 @@ window.addEventListener('load', function() {
   }
 
   // Build game cards for home page with new style
-  function _buildGameCards() {
+  window._buildGameCards = function() {
     var games = [
       {e:'\u2694\ufe0f',t:'DIE',n:'Kim Hayatta Kalacak',d:'Karakterler birer birer eleniyor — sonuna kim kalacak?',diff:'Kolay',dc:'rgba(45,212,191,.08);color:#2dd4bf',ib:'rgba(245,158,11,.1)'},
       {e:'\ud83d\udc65',t:'TEAM',n:'Ekibini Kur',d:'Hayalindeki dream team\'i oluştur ve paylaş',diff:'Kolay',dc:'rgba(45,212,191,.08);color:#2dd4bf',ib:'rgba(139,92,246,.1)'},
@@ -225,6 +237,12 @@ window.addEventListener('load', function() {
       {e:'\u2753',t:'WHO',n:'Sen Kimsin?',d:'Kişilik testine gir — hangi karaktere benziyorsun?',diff:'KEŞFET!',dc:'rgba(139,92,246,.08);color:#8b5cf6',ib:'rgba(139,92,246,.1)'},
       {e:'\ud83c\udfac',t:'STREAM',n:'Yayıncı Oyunları',d:'Chat ile interaktif 7 farklı oyun modu',diff:'İNTERAKTİF !',dc:'rgba(232,67,62,.08);color:#e8433e',ib:'rgba(232,67,62,.12)',str:true}
     ];
+    // Apply custom names
+    var cn=window._customGameNames||{};
+    games.forEach(function(g){
+      if(cn[g.t+'_name']) g.n=cn[g.t+'_name'];
+      if(cn[g.t+'_desc']) g.d=cn[g.t+'_desc'];
+    });
     return games.filter(function(g){
       var gd=GD.find(function(x){return x.t===g.t});
       return gd&&gd.on;
