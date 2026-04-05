@@ -17,9 +17,9 @@ function whoStart() {
       <div class="cg" style="text-align:center;padding:60px 40px;max-width:900px;width:100%">
         <div style="font-size:120px;margin-bottom:20px">🪞</div>
         <h3 class="fd" style="font-size:48px;font-weight:700;margin-bottom:14px">Hangi EightBornV Karakterisin?</h3>
-        <p style="font-size:20px;color:var(--t2);margin-bottom:12px">20 soruya cevap ver, yapay zeka sana en yakın karakteri bulsun!</p>
-        <p style="font-size:16px;color:var(--t3);margin-bottom:36px">201 karakterden biri olabilirsin...</p>
-        <button class="btn bp" style="padding:20px 48px;font-size:22px;border-radius:16px" onclick="initWho()">🚀 Teste Başla</button>
+        <p style="font-size:30px;color:var(--t2);margin-bottom:12px">20 soruya cevap ver, yapay zeka sana en yakın karakteri bulsun!</p>
+        <p style="font-size:24px;color:var(--t3);margin-bottom:36px">201 karakterden biri olabilirsin...</p>
+        <button class="btn bp" style="padding:32px 48px;font-size:32px;border-radius:16px" onclick="initWho()">🚀 Teste Başla</button>
       </div>
     </div>`;
 }
@@ -46,7 +46,7 @@ function renderWhoQ() {
   ag.innerHTML = `
     <div style="display:flex;align-items:center;gap:12px;padding:10px 20px">
       <button class="btn bg bsm" onclick="bk()">← Çık</button>
-      <div class="gi" style="background:linear-gradient(135deg,#e8433e,#e8433e);width:48px;height:48px;font-size:22px">🪞</div>
+      <div class="gi" style="background:linear-gradient(135deg,#e8433e,#e8433e);width:48px;height:48px;font-size:32px">🪞</div>
       <div style="flex:1">
         <h2 class="fd" style="font-weight:700;font-size:28px">Soru ${num}/${total}</h2>
       </div>
@@ -62,7 +62,7 @@ function renderWhoQ() {
           <p style="font-size:28px;font-weight:600;color:var(--t1);line-height:1.4" class="fd">${esc(q.q)}</p>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          ${q.o.map(function(o, i) { return '<div class="card" style="cursor:pointer;padding:20px;text-align:left;display:flex;align-items:center;gap:14px;transition:all .3s" onclick="whoAnswer('+i+')"><div style="width:44px;height:44px;border-radius:12px;background:var(--bg1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#e8433e;flex-shrink:0" class="fd">' + String.fromCharCode(65+i) + '</div><span style="font-size:18px;font-weight:500">' + o + '</span></div>'; }).join('')}
+          ${q.o.map(function(o, i) { return '<div class="card" style="cursor:pointer;padding:32px;text-align:left;display:flex;align-items:center;gap:14px;transition:all .3s" onclick="whoAnswer('+i+')"><div style="width:44px;height:44px;border-radius:12px;background:var(--bg1);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#e8433e;flex-shrink:0" class="fd">' + String.fromCharCode(65+i) + '</div><span style="font-size:28px;font-weight:500">' + o + '</span></div>'; }).join('')}
         </div>
       </div>
     </div>`;
@@ -87,7 +87,7 @@ async function analyzeWho() {
       <div class="cg" style="text-align:center;padding:60px 40px;max-width:600px">
         <div style="font-size:80px;margin-bottom:16px;animation:crownDrop .6s ease infinite alternate">🪞</div>
         <h2 class="fd" style="font-size:32px;font-weight:700;margin-bottom:12px">Analiz Ediliyor...</h2>
-        <p style="font-size:18px;color:var(--t2)">Cevapların analiz ediliyor, sana en uygun karakter bulunuyor.</p>
+        <p style="font-size:28px;color:var(--t2)">Cevapların analiz ediliyor, sana en uygun karakter bulunuyor.</p>
         <div style="margin-top:24px"><div style="width:200px;height:4px;background:var(--bg3);border-radius:2px;margin:0 auto;overflow:hidden"><div style="height:100%;width:100%;background:linear-gradient(90deg,#e8433e,#e8433e);border-radius:2px;animation:loading 1.5s ease infinite"></div></div></div>
       </div>
     </div>
@@ -235,7 +235,7 @@ function renderWhoResult(result, reason) {
     <div style="flex:1;display:flex;align-items:center;justify-content:center">
       <div style="text-align:center;width:100%;max-width:480px;position:relative;overflow:hidden" id="who-box">
         
-        <p class="fd" style="font-size:22px;font-weight:500;color:var(--t2);margin-bottom:16px;animation:fu .5s ease both">Sen tam olarak</p>
+        <p class="fd" style="font-size:32px;font-weight:500;color:var(--t2);margin-bottom:16px;animation:fu .5s ease both">Sen tam olarak</p>
         
         <div style="max-width:500px;width:100%;border-radius:32px;overflow:hidden;margin:0 auto 20px;border:3px solid #e8433e40;animation:fu .6s ease .1s both">
           ${cp(result, 500)}
