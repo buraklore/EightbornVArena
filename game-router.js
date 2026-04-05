@@ -165,9 +165,9 @@ window.addEventListener('load', function() {
 
     // STATS
     '<div style="max-width:1400px;margin:0 auto;padding:16px 32px 0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px" id="home-stats">' +
-      '<div class="card" style="padding:24px 26px;display:flex;align-items:center;gap:16px"><div style="width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(232,67,62,.1);color:var(--v);flex-shrink:0">\u2694\ufe0f</div><div><div class="fd" style="font-size:36px;line-height:1">218+</div><div style="font-size:14px;color:var(--t2);margin-top:2px">Toplam Karakter</div></div></div>' +
-      '<div class="card" style="padding:24px 26px;display:flex;align-items:center;gap:16px"><div style="width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(45,212,191,.1);color:var(--m);flex-shrink:0">\ud83c\udfae</div><div><div class="fd" style="font-size:36px;line-height:1">2,500+</div><div style="font-size:14px;color:var(--t2);margin-top:2px">Toplam Oynama</div></div></div>' +
-      '<div class="card" style="padding:24px 26px;display:flex;align-items:center;gap:16px"><div style="width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(245,158,11,.1);color:#f59e0b;flex-shrink:0">\ud83c\udfc6</div><div><div class="fd" style="font-size:36px;line-height:1">45,000+</div><div style="font-size:14px;color:var(--t2);margin-top:2px">Kazanılan Puan</div></div></div>' +
+      '<div class="card" style="padding:24px 26px;display:flex;align-items:center;gap:16px"><div style="width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(232,67,62,.1);color:var(--v);flex-shrink:0">\u2694\ufe0f</div><div><div class="fd" style="font-size:36px;line-height:1" data-s="chars">218+</div><div style="font-size:14px;color:var(--t2);margin-top:2px">Toplam Karakter</div></div></div>' +
+      '<div class="card" style="padding:24px 26px;display:flex;align-items:center;gap:16px"><div style="width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(45,212,191,.1);color:var(--m);flex-shrink:0">\ud83c\udfae</div><div><div class="fd" style="font-size:36px;line-height:1" data-s="plays">2,500+</div><div style="font-size:14px;color:var(--t2);margin-top:2px">Toplam Oynama</div></div></div>' +
+      '<div class="card" style="padding:24px 26px;display:flex;align-items:center;gap:16px"><div style="width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(245,158,11,.1);color:#f59e0b;flex-shrink:0">\ud83c\udfc6</div><div><div class="fd" style="font-size:36px;line-height:1" data-s="pts">45,000+</div><div style="font-size:14px;color:var(--t2);margin-top:2px">Kazanılan Puan</div></div></div>' +
       '<div class="card" style="padding:24px 26px;display:flex;align-items:center;gap:16px"><div style="width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;background:rgba(139,92,246,.1);color:#8b5cf6;flex-shrink:0">\ud83d\udcca</div><div><div class="fd" style="font-size:36px;line-height:1">8</div><div style="font-size:14px;color:var(--t2);margin-top:2px">Oyun Modu</div></div></div>' +
     '</div></div>' +
 
@@ -187,6 +187,21 @@ window.addEventListener('load', function() {
     '<div style="max-width:1400px;margin:auto;padding:48px 32px 56px" id="sec-contact"><div style="background:var(--bg2);border:1px solid #ffffff06;border-radius:20px;padding:60px;display:flex;gap:60px;align-items:flex-start"><div style="flex:1"><h2 class="fd" style="font-size:52px;letter-spacing:2px;margin-bottom:12px">BİZE ULAŞIN</h2><p style="font-size:17px;color:var(--t2);line-height:1.7">Sorularınız, önerileriniz veya hata bildirimleri için bize yazabilirsiniz. En kısa sürede dönüş yapacağız.</p></div><div style="flex:1;max-width:480px"><label class="lbl">Konu Başlığı</label><input class="inp" id="contact-title" placeholder="Örn: Karakter Fotoğrafı Hatası" maxlength="100"><label class="lbl" style="margin-top:4px">Açıklama</label><textarea class="inp" id="contact-desc" rows="5" placeholder="Detaylandırın..." maxlength="1000" style="min-height:150px"></textarea><button class="btn bp" style="width:100%;padding:16px;font-size:16px;border-radius:12px;margin-top:8px" onclick="sendContact()">Gönder</button></div></div></div>';
 
     if(typeof rLB==='function') setTimeout(rLB,500);
+    // Load real stats
+    if(typeof apiGet==='function'){
+      apiGet('/init').then(function(r){
+        var el=document.getElementById('home-stats');if(!el)return;
+        var chars=r.characters?r.characters.length:218;
+        el.querySelector('[data-s="chars"]').textContent=chars+'+';
+      }).catch(function(){});
+      apiGet('/scores/timed-leaderboard?period=alltime').then(function(r){
+        var el=document.getElementById('home-stats');if(!el)return;
+        var total=0;var pts=0;
+        (r.leaderboard||[]).forEach(function(u){total+=parseInt(u.games_played||0);pts+=parseInt(u.total_score||0);});
+        el.querySelector('[data-s="plays"]').textContent=(total>0?total.toLocaleString():2500)+'+';
+        el.querySelector('[data-s="pts"]').textContent=(pts>0?pts.toLocaleString():45000)+'+';
+      }).catch(function(){});
+    }
   }
 
   // Build game cards for home page with new style
